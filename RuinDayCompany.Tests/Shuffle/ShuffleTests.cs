@@ -25,13 +25,13 @@ namespace RuinDayCompany.Tests.Shuffle
             infested.Should().HaveCount(crewCount);
             if (crewCount < shuffler.MinPlayers)
             {
-                infested.Imposters.Should().HaveCount(0);
-                Assert.Throws<InvalidOperationException>(() => infested.MainImposter);
+                infested.Impostors.Should().HaveCount(0);
+                Assert.Throws<InvalidOperationException>(() => infested.MainImpostor);
             }
             else
             {
-                infested.Imposters.Should().HaveCountGreaterThan(0);
-                infested.MainImposter.Name.Should().NotEndWith(shuffler.MinPlayers.ToString());
+                infested.Impostors.Should().HaveCountGreaterThan(0);
+                infested.MainImpostor.Name.Should().NotEndWith(shuffler.MinPlayers.ToString());
             }
         }
 

@@ -9,5 +9,6 @@ namespace RuinDayCompany.Interfaces
     public interface IRuinCrewmate
     {
         string Name { get; }
+        void GiveItem(GrabbableObject item);
     }
 }

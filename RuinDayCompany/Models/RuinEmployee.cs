@@ -1,5 +1,6 @@
 ﻿using GameNetcodeStuff;
 using RuinDayCompany.Interfaces;
+using RuinDayCompany.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,6 +30,19 @@ namespace RuinDayCompany.Models
             {
                 _name = crewmate.Name;
             }
+        }
+
+        public static IEnumerable<IRuinCrewmate> CreateFromGamePlayers(IEnumerable<PlayerControllerB> players)
+        {
+            foreach(var player in players)
+            {
+                yield return new RuinEmployee(player);
+            }
+        }
+
+        public void GiveItem(GrabbableObject item)
+        {
+            ReflectionHelper.InvokePrivateMethod(_stuffPlayer, "GrabObjectServerRpc", item);
         }
         //private PlayerControllerB
     }

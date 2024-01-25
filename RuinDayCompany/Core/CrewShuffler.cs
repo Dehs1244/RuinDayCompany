@@ -23,9 +23,9 @@ namespace RuinDayCompany.Core
 
         public InfestedCrew Shuffle()
         {
-            IEnumerable<RuinImposter> imposters = _ChooseImposters();
+            IEnumerable<RuinImpostor> Impostors = _ChooseImpostors();
 
-            var crew = new InfestedCrew(imposters);
+            var crew = new InfestedCrew(Impostors);
             foreach(var crewmate in _lethalCrew)
             {
                 crew.Add(crewmate);
@@ -34,7 +34,7 @@ namespace RuinDayCompany.Core
             return crew;
         }
 
-        private IEnumerable<RuinImposter> _ChooseImposters()
+        private IEnumerable<RuinImpostor> _ChooseImpostors()
         {
             if (_lethalCrew.Count() < MinPlayers)
                 yield break;
@@ -43,7 +43,7 @@ namespace RuinDayCompany.Core
             foreach(var crewmate in _lethalCrew)
             {
                 if ((indexer % MinPlayers) == 0)
-                    yield return new RuinImposter(crewmate);
+                    yield return new RuinImpostor(crewmate);
                 indexer++;
             }
         }

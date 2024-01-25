@@ -27,7 +27,7 @@ namespace RuinDayCompany.Patches
                 Plugin.Log(a.prefabObject.name);
             }
 
-            HUDManager.Instance.DisplayTip("It is Ruin Day!!!", "Beware the imposters.", isWarning: true, useSave: true, "LC_IntroTip1");
+            HUDManager.Instance.DisplayTip("It is Ruin Day!!!", "Beware the Impostors.", isWarning: true, useSave: true, "LC_IntroTip1");
             Plugin.Instance.Translator.LocalTransmitMessage(Plugin.Instance.RuinDayConfig.Message.Value);
         }
     }

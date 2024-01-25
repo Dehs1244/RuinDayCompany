@@ -10,12 +10,12 @@ namespace RuinDayCompany.Models
 {
     public class InfestedCrew : Collection<IRuinCrewmate>
     {
-        public IEnumerable<RuinImposter> Imposters { get; }
-        public RuinImposter MainImposter => Imposters.First();
+        public IEnumerable<RuinImpostor> Impostors { get; }
+        public RuinImpostor MainImpostor => Impostors.First();
 
-        public InfestedCrew(IEnumerable<RuinImposter> imposters)
+        public InfestedCrew(IEnumerable<RuinImpostor> impostors)
         {
-            Imposters = imposters;
+            Impostors = impostors;
         }
     }
 }
