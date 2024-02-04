@@ -5,17 +5,18 @@ using System.Text;
 using System.Threading.Tasks;
 using GameNetcodeStuff;
 using HarmonyLib;
+using RuinDayCompany.Modules;
 
 namespace RuinDayCompany.Patches
 {
     [HarmonyPatch(typeof(PlayerControllerB))]
     public class DamagePlayerPatch
     {
-        [HarmonyPatch("Hit")]
+        [HarmonyPatch(nameof(PlayerControllerB.DamagePlayerFromOtherClientClientRpc))]
         [HarmonyPrefix]
-        public static bool Damage(PlayerControllerB playerWhoHit, PlayerControllerB __instance)
+        public static bool Damage(ref int playerWhoHit, PlayerControllerB __instance)
         {
-            if(Plugin.Instance.RuinDayConfig.IsImpostorInstantKill.Value) __instance.DamagePlayer(100);
+            var player = StartOfRound.Instance.allPlayerScripts[playerWhoHit];
             return false;
         }
     }

@@ -10,6 +10,6 @@ namespace RuinDayCompany.Interfaces
     public interface ICrewShuffler
     {
         InfestedCrew Shuffle();
-        byte MinPlayers { get; set; }
+        int MinPlayers { get; set; }
     }
 }

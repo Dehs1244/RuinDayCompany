@@ -33,7 +33,13 @@ namespace RuinDayCompany
             Logger.LogMessage("Loaded custom signal stranslator");
 
             _harmony.PatchAll(typeof(Plugin));
-            _harmony.PatchAll(typeof(StartGamePatcher));
+            _harmony.PatchAll(typeof(LeverPatcher));
+            _harmony.PatchAll(typeof(ShovelImpostorPatch));
+            _harmony.PatchAll(typeof(ShotgunImpostorPatch));
+            _harmony.PatchAll(typeof(GrabbableObjectPatch));
+            _harmony.PatchAll(typeof(MonstersEnemyPatch));
+            _harmony.PatchAll(typeof(DamagePlayerPatch));
+            _harmony.PatchAll(typeof(RoundGamePatcher));
 
             Logger.Log(BepInEx.Logging.LogLevel.Message, $"Plugin {GUID} {VERSION} is loaded successfully, enjoy!");
         }

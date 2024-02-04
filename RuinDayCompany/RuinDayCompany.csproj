@@ -60,6 +60,9 @@
     <Reference Include="netstandard">
       <HintPath>..\References\netstandard.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\References\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.Netcode.Runtime">
       <HintPath>..\References\Unity.Netcode.Runtime.dll</HintPath>
     </Reference>

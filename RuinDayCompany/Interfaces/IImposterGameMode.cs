@@ -10,5 +10,9 @@ namespace RuinDayCompany.Interfaces
     internal interface IImpostorGameMode
     {
         InfestedCrew Crew { get; }
+        // Crack because Lethal Company Author is stupid.
+        T SpawnObject<T>(string itemName)
+            where T : GrabbableObject;
+        void DisplayIntro();
     }
 }

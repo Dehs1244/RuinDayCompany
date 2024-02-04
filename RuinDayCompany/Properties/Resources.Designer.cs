@@ -61,11 +61,38 @@ namespace RuinDayCompany.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Impostor &gt;:).
+        /// </summary>
+        internal static string Impostor {
+            get {
+                return ResourceManager.GetString("Impostor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Welcome.
         /// </summary>
         internal static string WelcomeToRuinDay {
             get {
                 return ResourceManager.GetString("WelcomeToRuinDay", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на You are crewmate.
+        /// </summary>
+        internal static string YouCrewmate {
+            get {
+                return ResourceManager.GetString("YouCrewmate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на You are impostor.
+        /// </summary>
+        internal static string YouImpostor {
+            get {
+                return ResourceManager.GetString("YouImpostor", resourceCulture);
             }
         }
     }

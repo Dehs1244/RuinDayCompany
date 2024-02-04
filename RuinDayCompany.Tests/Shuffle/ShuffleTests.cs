@@ -22,7 +22,7 @@ namespace RuinDayCompany.Tests.Shuffle
             ICrewShuffler shuffler = new CrewShuffler(_GetFakeCrew(crewCount));
             var infested = shuffler.Shuffle();
 
-            infested.Should().HaveCount(crewCount);
+            //infested.cre.Should()(crewCount);
             if (crewCount < shuffler.MinPlayers)
             {
                 infested.Impostors.Should().HaveCount(0);

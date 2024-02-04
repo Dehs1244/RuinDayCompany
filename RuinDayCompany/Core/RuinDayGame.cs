@@ -1,17 +1,26 @@
 ﻿using GameNetcodeStuff;
+using Newtonsoft.Json;
 using RuinDayCompany.Interfaces;
 using RuinDayCompany.Models;
-using System;
+using RuinDayCompany.Modules;
+using RuinDayCompany.Utils;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Unity.Netcode;
+using UnityEngine;
 
 namespace RuinDayCompany.Core
 {
-    internal class RuinDayGame : IImpostorGameMode
+    public class RuinDayGame : IImpostorGameMode
     {
-        public InfestedCrew Crew { get; }
+        [JsonProperty("crew")]
+        public InfestedCrew Crew { get; private set; }
+
+        [JsonConstructor]
+        public RuinDayGame()
+        {
+
+        }
 
         public RuinDayGame(InfestedCrew crew)
         {
@@ -23,6 +32,44 @@ namespace RuinDayCompany.Core
             var shuffle = new CrewShuffler(RuinEmployee.CreateFromGamePlayers(gameStuffPlayers));
 
             Crew = shuffle.Shuffle();
+        }
+
+        public T SpawnObject<T>(string itemName)
+            where T : GrabbableObject
+        {
+            foreach(var item in StartOfRound.Instance.allItemsList.itemsList)
+            {
+                Plugin.Log(item.itemName);
+            }
+
+            GameObject gameObject = Object.Instantiate
+                (StartOfRound.Instance.allItemsList.itemsList.First(x=> x.itemName == itemName).spawnPrefab, 
+                Vector3.zero, Quaternion.identity, StartOfRound.Instance.propsContainer);
+            gameObject.GetComponent<NetworkObject>().Spawn(false);
+            var grabbable = gameObject.GetComponent<T>();
+            grabbable.fallTime = 0;
+
+            return grabbable;
+        }
+
+        public void DisplayIntro()
+        {
+            if(Crew.IsImpostor(Crew.CurrentLocalCrewmate))
+            {
+                Plugin.SendLocalMessage(Properties.Resources.YouImpostor);
+                Plugin.Instance.Translator.LocalTransmitMessage(Properties.Resources.Impostor);
+            }
+            else
+            {
+                Plugin.SendLocalMessage(Properties.Resources.YouCrewmate);
+            }
+
+            HUDManager.Instance.DisplayTip("It is Ruin Day!!!", "С днем рождения.");
+        }
+
+        public static void ResetGame()
+        {
+            RuinGameModule.Instance.EndGame();
         }
     }
 }

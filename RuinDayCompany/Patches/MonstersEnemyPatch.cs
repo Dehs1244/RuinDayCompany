@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using GameNetcodeStuff;
 using HarmonyLib;
+using RuinDayCompany.Modules;
 
 namespace RuinDayCompany.Patches
 {
@@ -15,11 +16,10 @@ namespace RuinDayCompany.Patches
         [HarmonyPrefix]
         public static bool UntargetImpostor(PlayerControllerB __instance, ref bool __result)
         {
-            //TODO: Check for impostors.
             if (Plugin.Instance.RuinDayConfig.IsMonstersReactImpostor.Value) return true;
 
-            __result = true;
-            return false;
+            __result = RuinGameModule.Instance.Game.Crew.IsImpostor(__instance);
+            return !RuinGameModule.Instance.Game.Crew.IsImpostor(__instance);
         }
 
         [HarmonyPatch(nameof(EnemyAI.Update))]

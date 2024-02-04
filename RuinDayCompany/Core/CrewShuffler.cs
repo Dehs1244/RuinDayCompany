@@ -13,19 +13,19 @@ namespace RuinDayCompany.Core
     public class CrewShuffler : ICrewShuffler
     {
         private readonly IEnumerable<IRuinCrewmate> _lethalCrew;
-        public byte MinPlayers { get; set; }
+        public int MinPlayers { get; set; }
 
         public CrewShuffler(IEnumerable<IRuinCrewmate> crew)
         {
             _lethalCrew = crew.Shuffle();
-            MinPlayers = 3;
+            MinPlayers = Plugin.Instance.RuinDayConfig.MinPlayers.Value;
         }
 
         public InfestedCrew Shuffle()
         {
-            IEnumerable<RuinImpostor> Impostors = _ChooseImpostors();
+            IEnumerable<RuinImpostor> impostors = _ChooseImpostors();
 
-            var crew = new InfestedCrew(Impostors);
+            var crew = new InfestedCrew(impostors, _lethalCrew.First(x=> x.IsLocal));
             foreach(var crewmate in _lethalCrew)
             {
                 crew.Add(crewmate);
