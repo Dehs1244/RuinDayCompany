@@ -18,8 +18,8 @@ namespace RuinDayCompany.Patches
         {
             if (Plugin.Instance.RuinDayConfig.IsMonstersReactImpostor.Value) return true;
 
-            __result = RuinGameModule.Instance.Game.Crew.IsImpostor(__instance);
-            return !RuinGameModule.Instance.Game.Crew.IsImpostor(__instance);
+            __result = Plugin.Instance.CurrentGame.Crew.IsImpostor(__instance);
+            return !Plugin.Instance.CurrentGame.Crew.IsImpostor(__instance);
         }
 
         [HarmonyPatch(nameof(EnemyAI.Update))]

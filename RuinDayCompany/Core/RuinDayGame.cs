@@ -66,10 +66,5 @@ namespace RuinDayCompany.Core
 
             HUDManager.Instance.DisplayTip("It is Ruin Day!!!", "С днем рождения.");
         }
-
-        public static void ResetGame()
-        {
-            RuinGameModule.Instance.EndGame();
-        }
     }
 }

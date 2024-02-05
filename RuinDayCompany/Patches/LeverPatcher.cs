@@ -23,15 +23,16 @@ namespace RuinDayCompany.Patches
         [HarmonyPrefix]
         public static bool PushLever(StartMatchLever __instance)
         {
-            if (RuinGameModule.Instance == null)
+            if (Plugin.Instance.CurrentGame == null)
                 return true;
 
-            if (RuinGameModule.Instance.Game.Crew.IsLocalPlayerImpostor() && !Plugin.Instance.RuinDayConfig.IsImpostorCanLeaveShip.Value)
+            if (Plugin.Instance.CurrentGame.Crew.IsLocalPlayerImpostor() && 
+                !Plugin.Instance.RuinDayConfig.IsImpostorCanLeaveShip.Value)
                 return false;
 
             if (__instance.leverHasBeenPulled)
             {
-                RuinDayGame.ResetGame();
+                Plugin.EndGame();
             }
 
             return true;

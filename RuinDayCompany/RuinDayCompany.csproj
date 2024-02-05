@@ -39,6 +39,9 @@
     <Reference Include="HarmonyXInterop">
       <HintPath>..\References\HarmonyXInterop.dll</HintPath>
     </Reference>
+    <Reference Include="LethalNetworkAPI">
+      <HintPath>..\References\LethalNetworkAPI.dll</HintPath>
+    </Reference>
     <Reference Include="Mono.Cecil">
       <HintPath>..\References\Mono.Cecil.dll</HintPath>
     </Reference>

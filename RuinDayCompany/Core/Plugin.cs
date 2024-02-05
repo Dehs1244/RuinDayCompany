@@ -6,6 +6,10 @@ using RuinDayCompany.Infrastructure;
 using System.Text;
 using TMPro;
 using RuinDayCompany.Utils;
+using RuinDayCompany.Network;
+using RuinDayCompany.Core;
+using GameNetcodeStuff;
+using System.Linq;
 
 namespace RuinDayCompany
 {
@@ -22,6 +26,12 @@ namespace RuinDayCompany
 
         internal RuinDayConfig RuinDayConfig { get; private set; }
 
+        internal GameNetworkSynchronization GameSynchronization { get; private set; }
+
+        public RuinDayGame CurrentGame { get; private set; }
+
+        public static bool IsGameStarted => Instance.CurrentGame != null;
+
         private void Awake()
         {
             if(Instance == null) Instance = this;
@@ -31,6 +41,10 @@ namespace RuinDayCompany
             Logger.LogMessage("Loading custom signal translator...");
             Translator = new RuinTranslator();
             Logger.LogMessage("Loaded custom signal stranslator");
+
+            Logger.LogMessage("Loading synchronization managers...");
+            GameSynchronization = new GameNetworkSynchronization("game");
+            Logger.LogMessage("Game Synchronization Loaded!");
 
             _harmony.PatchAll(typeof(Plugin));
             _harmony.PatchAll(typeof(LeverPatcher));
@@ -74,6 +88,25 @@ namespace RuinDayCompany
                 TextMeshProUGUI textMeshProUGUI = HUDManager.Instance.chatText;
                 textMeshProUGUI.text = textMeshProUGUI.text + "\n" + HUDManager.Instance.ChatMessageHistory[i];
             }
+        }
+
+        public static void StartGame()
+        {
+            if (Instance.CurrentGame != null)
+                return;
+
+            var game = new RuinDayGame(FindObjectsOfType<PlayerControllerB>().Where(x => x.isPlayerControlled));
+            Instance.CurrentGame = new RuinDayGame();
+            Instance.GameSynchronization.Synchronize(game);
+        }
+
+        public static void EndGame()
+        {
+            if (Instance.CurrentGame == null)
+                return;
+
+            Instance.CurrentGame = null;
+            Instance.GameSynchronization.Synchronize(null);
         }
     }
 }

@@ -17,13 +17,10 @@ namespace RuinDayCompany.Patches
         [HarmonyPostfix]
         public static void FinishLoad(RoundManager __instance)
         {
-            var ruinDayGame = __instance.gameObject.GetComponent<RuinGameModule>();
-            if (ruinDayGame != null)
+            if (Plugin.IsGameStarted)
                 return;
 
-            var game = new RuinDayGame(UnityEngine.Object.FindObjectsOfType<PlayerControllerB>().Where(x => x.isPlayerControlled));
-            var gameModule = __instance.gameObject.AddComponent<RuinGameModule>();
-            gameModule.StartGame(game);
+            Plugin.StartGame();
         }
     }
 }
