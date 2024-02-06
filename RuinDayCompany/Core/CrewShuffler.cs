@@ -45,7 +45,7 @@ namespace RuinDayCompany.Core
                 if ((i % MinPlayers) == 0)
                     yield return new RuinImpostor(_lethalCrew.ElementAt(i));
 
-                if (MinPlayers > 1 && (i % (MinPlayers + 1)) == 0)
+                if (MinPlayers > 1 && Plugin.Instance.RuinDayConfig.IsSecurityInCrew.Value && (i % (MinPlayers + 1)) == 0)
                     yield return new AntiRuinSecurity(_lethalCrew.ElementAt(i));
 
                 yield return _lethalCrew.ElementAt(i);
