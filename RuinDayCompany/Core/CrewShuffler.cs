@@ -21,12 +21,13 @@ namespace RuinDayCompany.Core
             MinPlayers = Plugin.Instance.RuinDayConfig.MinPlayers.Value;
         }
 
-        public InfestedCrew Shuffle()
-        {
-            IEnumerable<RuinImpostor> impostors = _ChooseImpostors();
+        public InfestedCrew Shuffle() => _CreateCrew();
 
-            var crew = new InfestedCrew(impostors, _lethalCrew.First(x=> x.IsLocal));
-            foreach(var crewmate in _lethalCrew)
+        private InfestedCrew _CreateCrew()
+        {
+            InfestedCrew crew = new InfestedCrew();
+
+            foreach(var crewmate in _GiveCrewmatesRoles())
             {
                 crew.Add(crewmate);
             }
@@ -34,17 +35,20 @@ namespace RuinDayCompany.Core
             return crew;
         }
 
-        private IEnumerable<RuinImpostor> _ChooseImpostors()
+        private IEnumerable<IRuinCrewmate> _GiveCrewmatesRoles()
         {
             if (_lethalCrew.Count() < MinPlayers)
                 yield break;
 
-            var indexer = 0;
-            foreach(var crewmate in _lethalCrew)
+            for (var i = 0; i < _lethalCrew.Count(); i++)
             {
-                if ((indexer % MinPlayers) == 0)
-                    yield return new RuinImpostor(crewmate);
-                indexer++;
+                if ((i % MinPlayers) == 0)
+                    yield return new RuinImpostor(_lethalCrew.ElementAt(i));
+
+                if (MinPlayers > 1 && (i % (MinPlayers + 1)) == 0)
+                    yield return new AntiRuinSecurity(_lethalCrew.ElementAt(i));
+
+                yield return _lethalCrew.ElementAt(i);
             }
         }
     }

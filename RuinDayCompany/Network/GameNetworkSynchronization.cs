@@ -23,12 +23,16 @@ namespace RuinDayCompany.Network
             _impostorServerMessage.OnReceived += OnRecievedFromClient;
         }
 
-        private void OnRecievedFromClient(IImpostorGameMode arg1, ulong arg2)
+        private void OnRecievedFromClient(IImpostorGameMode arg1, ulong clientId)
         {
+            Plugin.Instance.CurrentGame = arg1;
+            Plugin.Instance.CurrentGame.DisplayIntro();
         }
 
         private void RecievedData(IImpostorGameMode obj)
         {
+            Plugin.Instance.CurrentGame = obj;
+            Plugin.Instance.CurrentGame.DisplayIntro();
         }
 
         public void Synchronize(IImpostorGameMode data)

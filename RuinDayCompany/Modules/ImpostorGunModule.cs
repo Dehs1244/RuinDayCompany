@@ -7,29 +7,9 @@ using UnityEngine;
 
 namespace RuinDayCompany.Modules
 {
-    public class ImpostorGunModule : MonoBehaviour
+    public class ImpostorGunModule : BaseGunModule
     {
-        [field: SerializeField]
-        public GrabbableObject GrabbableObject { get; set; }
-
-        //DestroyItemInSlot
-        [field: SerializeField]
-        public int ItemSlotId { get; set; }
-
-        [SerializeField]
-        private float _delay;
-
-        public bool IsCanUse => _delay <= 0;
-
-        public void FixedUpdate()
-        {
-            if (!IsCanUse)
-            {
-                _delay -= 1 * Time.deltaTime;
-            }
-        }
-
-        public void OnShoot()
+        public override void OnShoot()
         {
             _delay = Plugin.Instance.RuinDayConfig.ImpostorKillingDelay.Value;
         }

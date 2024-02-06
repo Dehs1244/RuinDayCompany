@@ -10,6 +10,9 @@ using RuinDayCompany.Network;
 using RuinDayCompany.Core;
 using GameNetcodeStuff;
 using System.Linq;
+using RuinDayCompany.Interfaces;
+using RuinDayCompany.Logging;
+using System;
 
 namespace RuinDayCompany
 {
@@ -19,7 +22,15 @@ namespace RuinDayCompany
         public const string GUID = "blowoutteam.dehs.ruinday";
         public const string VERSION = "1.0.0";
 
-        public static Plugin Instance { get; private set; }
+        private static Plugin _instance;
+        public static Plugin Instance { get => _instance; set 
+            {
+                if (_instance != null)
+                    return;
+                _instance = value;
+            }
+        }
+
         private Harmony _harmony = new Harmony(GUID);
 
         public RuinTranslator Translator { get; private set; }
@@ -28,37 +39,54 @@ namespace RuinDayCompany
 
         internal GameNetworkSynchronization GameSynchronization { get; private set; }
 
-        public RuinDayGame CurrentGame { get; private set; }
+        internal IImpostorGameMode CurrentGame { get; set; }
 
         public static bool IsGameStarted => Instance.CurrentGame != null;
 
+        public IRuinLogger RuinLogger { get; private set; }
+
         private void Awake()
         {
+            if(RuinLogger == null) RuinLogger = new RuinLogger(Logger);
             if(Instance == null) Instance = this;
 
             RuinDayConfig = new RuinDayConfig();
 
-            Logger.LogMessage("Loading custom signal translator...");
+            RuinLogger.LogMessage("Loading custom signal translator...");
             Translator = new RuinTranslator();
-            Logger.LogMessage("Loaded custom signal stranslator");
+            RuinLogger.LogMessage("Loaded custom signal stranslator");
 
-            Logger.LogMessage("Loading synchronization managers...");
-            GameSynchronization = new GameNetworkSynchronization("game");
-            Logger.LogMessage("Game Synchronization Loaded!");
+            RuinLogger.LogMessage("Loading synchronization managers...");
 
-            _harmony.PatchAll(typeof(Plugin));
-            _harmony.PatchAll(typeof(LeverPatcher));
-            _harmony.PatchAll(typeof(ShovelImpostorPatch));
-            _harmony.PatchAll(typeof(ShotgunImpostorPatch));
-            _harmony.PatchAll(typeof(GrabbableObjectPatch));
-            _harmony.PatchAll(typeof(MonstersEnemyPatch));
-            _harmony.PatchAll(typeof(DamagePlayerPatch));
-            _harmony.PatchAll(typeof(RoundGamePatcher));
+            try
+            {
+                GameSynchronization = new GameNetworkSynchronization("game");
+                RuinLogger.LogMessage("Game Synchronization Loaded!");
+            }
+            catch (Exception)
+            {
+                RuinLogger.LogError("Unable to load game network synchronization");
+            }
 
-            Logger.Log(BepInEx.Logging.LogLevel.Message, $"Plugin {GUID} {VERSION} is loaded successfully, enjoy!");
+            RuinLogger.LogMessage("Loading patchers...");
+            if (_harmony != null)
+            {
+                _harmony.PatchAll(typeof(Plugin));
+                _harmony.PatchAll(typeof(LeverPatcher));
+                _harmony.PatchAll(typeof(ShovelImpostorPatch));
+                _harmony.PatchAll(typeof(ShotgunImpostorPatch));
+                _harmony.PatchAll(typeof(GrabbableObjectPatch));
+                _harmony.PatchAll(typeof(MonstersEnemyPatch));
+                _harmony.PatchAll(typeof(DamagePlayerPatch));
+                _harmony.PatchAll(typeof(RoundGamePatcher));
+                RuinLogger.LogMessage("Patchers loaded!");
+            }
+            else RuinLogger.LogError("Unable to load patchers!");
+
+            RuinLogger.LogInfo($"Plugin {GUID} {VERSION} is loaded successfully, enjoy!");
         }
 
-        public static void Log(string message) => Instance.Logger.LogMessage(message);
+        public static void Log(string message) => Instance.RuinLogger.LogMessage(message);
 
         public static void SendLocalMessage(string message)
         {
@@ -98,6 +126,11 @@ namespace RuinDayCompany
             var game = new RuinDayGame(FindObjectsOfType<PlayerControllerB>().Where(x => x.isPlayerControlled));
             Instance.CurrentGame = new RuinDayGame();
             Instance.GameSynchronization.Synchronize(game);
+        }
+
+        public void InitLogger(IRuinLogger logger)
+        {
+            if (RuinLogger == null) RuinLogger = logger;
         }
 
         public static void EndGame()

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace RuinDayCompany.Tests.Shuffle
 {
-    public class ShuffleTests
+    public class ShuffleTests : BaseRuinTest
     {
         [Theory]
         [InlineData(1)]
@@ -19,6 +19,7 @@ namespace RuinDayCompany.Tests.Shuffle
         [InlineData(10)]
         public void ShuffleTest(int crewCount)
         {
+            _CreateFakeUnityPlayers(crewCount);
             ICrewShuffler shuffler = new CrewShuffler(_GetFakeCrew(crewCount));
             var infested = shuffler.Shuffle();
 
@@ -30,8 +31,9 @@ namespace RuinDayCompany.Tests.Shuffle
             }
             else
             {
+                infested.AntiRuins.Should().HaveCount(crewCount / (shuffler.MinPlayers + 2));
                 infested.Impostors.Should().HaveCountGreaterThan(0);
-                infested.MainImpostor.Name.Should().NotEndWith(shuffler.MinPlayers.ToString());
+                infested.MainImpostor.Name.Should().StartWith("Test");
             }
         }
 

@@ -44,7 +44,14 @@ namespace RuinDayCompany.Infrastructure
         public RuinDayConfig()
         {
             Plugin.Log("Loading RuinDay config...");
-            var filePath = Path.Combine(Paths.ConfigPath, $"{CONFIG_NAME}.{CONFIG_EXTENSION}");
+            var configPath = Paths.ConfigPath;
+            if (string.IsNullOrEmpty(configPath))
+            {
+                Plugin.Instance.RuinLogger.LogError("Unavailable to load config paths, create config in execute directory");
+                configPath = string.Empty;
+            }
+
+            var filePath = Path.Combine(configPath, $"{CONFIG_NAME}.{CONFIG_EXTENSION}");
             _file = new ConfigFile(filePath, true);
 
             MinPlayers = _file.Bind("Ruin Game", "MinPlayers", 3, "Minimum number of players to start Ruin Day");

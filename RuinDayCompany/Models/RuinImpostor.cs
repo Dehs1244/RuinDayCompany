@@ -12,6 +12,11 @@ namespace RuinDayCompany.Models
 {
     public class RuinImpostor : RuinEmployee
     {
+        public RuinImpostor() : base()
+        {
+
+        }
+
         public RuinImpostor(IRuinCrewmate employee) : base(employee)
         {
         }
@@ -35,7 +40,7 @@ namespace RuinDayCompany.Models
 
             var gun = game.SpawnObject<GrabbableObject>(impostorWeapon);
             var instance = gun.gameObject.AddComponent<ImpostorGunModule>();
-            instance.GrabbableObject = gun;
+            instance.Gun = gun;
 
             if (gun is ShotgunItem shotgun) shotgun.shellsLoaded = 100; 
 
